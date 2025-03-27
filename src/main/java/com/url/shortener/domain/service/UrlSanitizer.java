@@ -34,4 +34,14 @@ public class UrlSanitizer {
     private static boolean isJavaScriptUrl(String url) {
         return JAVASCRIPT_PATTERN.matcher(url).find();
     }
+
+    private static boolean containsXssRisks(String url) {
+        return XSS_PATTERN.matcher(url).find() ||
+                DANGEROUS_CHARS.matcher(url).find();
+    }
+
+    private static boolean isAllowedProtocol(String protocol) {
+        return protocol.equals("http") ||
+                protocol.equals("https");
+    }
 }
