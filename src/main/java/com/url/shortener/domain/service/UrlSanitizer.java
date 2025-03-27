@@ -1,5 +1,7 @@
 package com.url.shortener.domain.service;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.regex.Pattern;
 
 public class UrlSanitizer {
@@ -31,6 +33,21 @@ public class UrlSanitizer {
         // Check for XSS attempts
         if (containsXssRisks(cleanUrl)) {
             throw new IllegalArgumentException("URL contains potential XSS risks");
+        }
+
+        // Validate URL structure
+        try {
+            URL parsedUrl = URI.create(cleanUrl).toURL();
+
+            // Additional protocol checks
+            String protocol = parsedUrl.getProtocol().toLowerCase();
+            if (!isAllowedProtocol(protocol)) {
+                throw new IllegalArgumentException("Unsupported URL protocol");
+            }
+
+            return cleanUrl;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid URL: " + e.getMessage());
         }
 
     }
