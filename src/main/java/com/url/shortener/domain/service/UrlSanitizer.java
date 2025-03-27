@@ -28,6 +28,10 @@ public class UrlSanitizer {
             throw new IllegalArgumentException("JavaScript URLs are not allowed");
         }
 
+        // Check for XSS attempts
+        if (containsXssRisks(cleanUrl)) {
+            throw new IllegalArgumentException("URL contains potential XSS risks");
+        }
 
     }
 
