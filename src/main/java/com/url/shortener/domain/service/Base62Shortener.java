@@ -9,12 +9,22 @@ public class Base62Shortener implements ShortenerService{
 
     @Override
     public String generateShortUrl(String originalUrl) {
-        long id = System.currentTimeMillis();
-        StringBuilder shortUrl = new StringBuilder();
-        while (id > 0) {
-            shortUrl.append(BASE62_CHARS.charAt((int)(id % BASE)));
-            id /= BASE;
+        try {
+            String safeUrl = UrlSanitizer.sanitizeUrl(originalUrl);
+            // Here need to get id of safeUrl from database
+            long id = System.currentTimeMillis();
+
+            StringBuilder shortUrl = new StringBuilder();
+
+            do {
+                shortUrl.insert(0, BASE62_CHARS.charAt((int)(id % BASE)));
+                id /= BASE;
+            } while (id > 0);
+
+            return shortUrl.toString();
+
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("URL Validation error: " + e.getMessage());
         }
-        return shortUrl.reverse().toString();
     }
 }
