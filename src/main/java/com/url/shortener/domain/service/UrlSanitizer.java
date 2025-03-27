@@ -30,4 +30,8 @@ public class UrlSanitizer {
 
 
     }
+
+    private static boolean isJavaScriptUrl(String url) {
+        return JAVASCRIPT_PATTERN.matcher(url).find();
+    }
 }
