@@ -1,12 +1,23 @@
 package com.url.shortener.domain.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
-
+@Entity
+@Table(name = "urls")
 public class Url {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false, unique = true, length = 500)
     private String originalUrl;
+
+    @Column(nullable = false, unique = true, length = 10)
     private String shortUrl;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Url() {}
