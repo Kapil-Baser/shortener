@@ -1,5 +1,7 @@
 package com.url.shortener.domain.service;
 
+import com.url.shortener.domain.dto.UrlDTO;
+
 public interface ShortenerService {
-    String generateShortUrl(String originalUrl);
+    UrlDTO generateShortUrl(String originalUrl);
 }
