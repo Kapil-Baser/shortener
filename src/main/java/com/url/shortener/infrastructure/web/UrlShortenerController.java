@@ -19,6 +19,6 @@ public class UrlShortenerController {
     @PostMapping("/shorten")
     @ResponseStatus(HttpStatus.CREATED)
     public String shortenUrl(@RequestParam String url, @RequestParam(defaultValue = "base62") String strategy) {
-        return "";
+        return urlShorteningFactory.generateShortUrl(url, strategy);
     }
 }
