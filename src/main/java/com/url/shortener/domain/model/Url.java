@@ -15,7 +15,7 @@ public class Url {
     @Column(nullable = false, unique = true, length = 500)
     private String originalUrl;
 
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(unique = true, length = 10)
     private String shortUrl;
 
     private LocalDateTime createdAt = LocalDateTime.now();
