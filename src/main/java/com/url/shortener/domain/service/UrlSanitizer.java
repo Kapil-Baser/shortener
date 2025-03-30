@@ -1,5 +1,7 @@
 package com.url.shortener.domain.service;
 
+import com.url.shortener.domain.exception.InvalidUrlException;
+
 import java.net.URI;
 import java.net.URL;
 import java.util.regex.Pattern;
@@ -27,12 +29,12 @@ public class UrlSanitizer {
 
         // Check for JavaScript based attacks
         if (isJavaScriptUrl(cleanUrl)) {
-            throw new IllegalArgumentException("JavaScript URLs are not allowed");
+            throw new InvalidUrlException("JavaScript URLs are not allowed");
         }
 
         // Check for XSS attempts
         if (containsXssRisks(cleanUrl)) {
-            throw new IllegalArgumentException("URL contains potential XSS risks");
+            throw new InvalidUrlException("URL contains potential XSS risks");
         }
 
         // Validate URL structure
@@ -42,12 +44,12 @@ public class UrlSanitizer {
             // Additional protocol checks
             String protocol = parsedUrl.getProtocol().toLowerCase();
             if (!isAllowedProtocol(protocol)) {
-                throw new IllegalArgumentException("Unsupported URL protocol");
+                throw new InvalidUrlException("Unsupported URL protocol");
             }
 
             return cleanUrl;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid URL: " + e.getMessage());
+            throw new InvalidUrlException("Invalid URL: " + e.getMessage());
         }
 
     }
