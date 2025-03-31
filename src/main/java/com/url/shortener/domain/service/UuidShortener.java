@@ -1,6 +1,7 @@
 package com.url.shortener.domain.service;
 
 import com.url.shortener.domain.dto.UrlDTO;
+import com.url.shortener.domain.exception.DataBaseException;
 import com.url.shortener.domain.mapper.UrlMapper;
 import com.url.shortener.domain.model.Url;
 import com.url.shortener.infrastructure.persistence.UrlRepository;
@@ -46,11 +47,11 @@ public class UuidShortener implements ShortenerService{
                 newUrl = repository.save(newUrl);
             } catch (DataAccessException e) {
                 logger.info("Error while saving URL to database", e);
-                throw new RuntimeException("Error while saving URL to database", e);
+                throw new DataBaseException("Error while saving URL to database", e);
             }
 
             logger.info("Successfully saved URL to database");
-            logger.info("Successfully generated the short URL: {} for Original URL: {}", newUrl.getOriginalUrl(), safeUrl);
+            logger.info("Successfully generated the short URL: {} for Original URL: {}", newUrl.getShortUrl(), safeUrl);
             return UrlMapper.toDTO(newUrl);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("URL Validation error: " + e.getMessage());
