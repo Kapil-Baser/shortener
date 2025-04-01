@@ -32,7 +32,7 @@ public class Base62Shortener implements ShortenerService{
             String safeUrl = UrlSanitizer.sanitizeUrl(originalUrl);
 
             // Checking if URL already exists in database
-            Optional<Url> existingUrl = repository.findByOriginalUrl(safeUrl);
+            Optional<Url> existingUrl = repository.findByUrl(safeUrl);
             if (existingUrl.isPresent()) {
                 logger.info("URL already exists in database, returning existing short URL");
                 return UrlMapper.toDTO(existingUrl.get());
@@ -40,7 +40,7 @@ public class Base62Shortener implements ShortenerService{
 
             // In case URL does not exist then we create a new URL entity
             Url newUrl = new Url();
-            newUrl.setOriginalUrl(safeUrl);
+            newUrl.setUrl(safeUrl);
             newUrl.setCreatedAt(LocalDateTime.now());
 
             // Saving the entity first to get the ID
