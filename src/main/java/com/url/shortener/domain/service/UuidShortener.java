@@ -29,7 +29,7 @@ public class UuidShortener implements ShortenerService{
         try {
             String safeUrl = UrlSanitizer.sanitizeUrl(originalUrl);
 
-            Optional<Url> existingUrl = repository.findByOriginalUrl(safeUrl);
+            Optional<Url> existingUrl = repository.findByUrl(safeUrl);
             if (existingUrl.isPresent()) {
                 logger.info("Requested URL already exists in database, returning the existing URL");
                 return UrlMapper.toDTO(existingUrl.get());
@@ -37,7 +37,7 @@ public class UuidShortener implements ShortenerService{
 
             logger.info("URL does not exist in database so creating a new one");
             Url newUrl = new Url();
-            newUrl.setOriginalUrl(safeUrl);
+            newUrl.setUrl(safeUrl);
             newUrl.setCreatedAt(LocalDateTime.now());
             // Setting the generated short URL
             newUrl.setShortUrl(UUID.randomUUID().toString().replace("-", "").substring(0, 6));
