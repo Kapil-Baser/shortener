@@ -2,6 +2,7 @@ package com.url.shortener.infrastructure.web;
 
 import com.url.shortener.domain.dto.UrlDTO;
 import com.url.shortener.domain.factory.UrlShorteningFactory;
+import com.url.shortener.domain.model.Url;
 import com.url.shortener.domain.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,13 @@ public class UrlShortenerController {
 
     @GetMapping("/shorten/{url}")
     public ResponseEntity<UrlDTO> getUrlDTOFromShortUrl(@PathVariable("url") String url) {
-        UrlDTO dtoFromOriginalUrl = urlService.getDTOFromShortUrl(url);
-        return ResponseEntity.status(HttpStatus.OK).body(dtoFromOriginalUrl);
+        UrlDTO dtoFromShortUrl = urlService.getDTOFromShortUrl(url);
+        return ResponseEntity.status(HttpStatus.OK).body(dtoFromShortUrl);
+    }
+
+    @PutMapping("/shorten/{shortUrl}")
+    public ResponseEntity<UrlDTO> updateUrl(@PathVariable("shortUrl") String shortUrl, @RequestBody Url url) {
+        UrlDTO updatedDTO = urlService.updateUrl(shortUrl, url);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedDTO);
     }
 }
