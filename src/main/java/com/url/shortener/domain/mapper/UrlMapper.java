@@ -7,7 +7,7 @@ public class UrlMapper {
     public static UrlDTO toDTO(Url url) {
         UrlDTO dto = new UrlDTO();
         dto.setId(url.getId().toString());
-        dto.setOriginalUrl(url.getOriginalUrl());
+        dto.setUrl(url.getUrl());
         dto.setShortUrl(url.getShortUrl());
         dto.setCreatedAt(url.getCreatedAt().toString());
         return dto;
