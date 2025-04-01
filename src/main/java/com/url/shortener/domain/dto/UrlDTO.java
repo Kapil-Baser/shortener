@@ -2,7 +2,7 @@ package com.url.shortener.domain.dto;
 
 public class UrlDTO {
     private String id;
-    private String originalUrl;
+    private String url;
     private String shortUrl;
     private String createdAt;
 
@@ -14,12 +14,12 @@ public class UrlDTO {
         this.id = id;
     }
 
-    public String getOriginalUrl() {
-        return originalUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getShortUrl() {
