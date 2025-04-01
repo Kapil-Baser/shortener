@@ -13,7 +13,7 @@ public class Url {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 500)
-    private String originalUrl;
+    private String url;
 
     @Column(unique = true, length = 10)
     private String shortUrl;
@@ -26,7 +26,7 @@ public class Url {
     public Url() {}
 
     public Url(String originalUrl, String shortUrl) {
-        this.originalUrl = originalUrl;
+        this.url = originalUrl;
         this.shortUrl = shortUrl;
     }
 
@@ -38,12 +38,12 @@ public class Url {
         this.id = id;
     }
 
-    public String getOriginalUrl() {
-        return originalUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getShortUrl() {
