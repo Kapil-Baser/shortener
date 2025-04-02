@@ -45,19 +45,16 @@ public class UrlService {
         }
 
         try {
-            Optional<Url> url = repository.findByShortUrl(shortUrl);
-            if (url.isEmpty()) {
-                throw new ResourceNotFoundException("Error: No URL found");
-            }
+            Url foundUrl = repository.findByShortUrl(shortUrl)
+                    .orElseThrow(
+                    () -> new ResourceNotFoundException("Error: No URL found")
+            );
+
             // Updating the access count
-            Url foundUrl = url.get();
             foundUrl.setAccessCount(foundUrl.getAccessCount() + 1);
+
             // Saving the Url entity back to database before returning
-            try {
-                repository.save(foundUrl);
-            } catch (DataAccessException e) {
-                throw new DataBaseException("Failed to update access statistics", e);
-            }
+            repository.save(foundUrl);
 
             return UrlMapper.toDTO(foundUrl);
         } catch (DataAccessException e) {
