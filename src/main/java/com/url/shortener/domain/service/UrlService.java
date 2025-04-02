@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -72,17 +73,17 @@ public class UrlService {
         }
 
         try {
-            Optional<Url> savedUrl = repository.findByShortUrl(shortUrl);
-            if (savedUrl.isEmpty()) {
-                throw new ResourceNotFoundException("Error: No matching URL for requested short url: " + shortUrl);
-            }
+            Url savedUrl = repository.findByShortUrl(shortUrl)
+                    .orElseThrow(() -> new ResourceNotFoundException("Error: No matching URL for requested short url: " + shortUrl)
+            );
 
-            Url url = savedUrl.get();
-            url.setUrl(updatedUrl.getUrl());
-            url.setUpdatedAt(updatedUrl.getUpdatedAt());
-            repository.save(url);
+            // Updating the URL
+            savedUrl.setUrl(updatedUrl.getUrl());
+            savedUrl.setUpdatedAt(LocalDateTime.now());
 
-            return UrlMapper.toDTO(url);
+            repository.save(savedUrl);
+
+            return UrlMapper.toDTO(savedUrl);
         } catch (DataAccessException e) {
             throw new DataBaseException("Database error while trying to update the URL", e);
         }
