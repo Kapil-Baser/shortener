@@ -23,7 +23,7 @@ public class UrlService {
         this.repository = repository;
     }
 
-    public UrlDTO getDTOFromOriginalUrl(String originalUrl) {
+/*    public UrlDTO getDTOFromOriginalUrl(String originalUrl) {
         if (originalUrl == null || originalUrl.isEmpty()) {
             throw new IllegalArgumentException("URL cannot be null or empty");
         }
@@ -38,7 +38,7 @@ public class UrlService {
         } catch (DataAccessException e) {
             throw new DataBaseException("Database error while retrieving URL", e);
         }
-    }
+    }*/
 
     public UrlDTO getDTOFromShortUrl(String shortUrl) {
         if (shortUrl == null || shortUrl.isEmpty()) {
