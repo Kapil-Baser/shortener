@@ -44,20 +44,19 @@ public class UuidShortener implements ShortenerService{
             newUrl.setShortUrl(UUID.randomUUID().toString().replace("-", "").substring(0, 6));
 
             logger.info("Saving the URL to database before returning the DTO");
-            try {
-                newUrl = repository.save(newUrl);
-            } catch (DataAccessException e) {
-                logger.info("Error while saving URL to database", e);
-                throw new DataBaseException("Error while saving URL to database", e);
-            }
+
+            newUrl = repository.save(newUrl);
 
             logger.info("Successfully saved URL to database");
             logger.info("Successfully generated the short URL: {} for Original URL: {}", newUrl.getShortUrl(), safeUrl);
             return UrlMapper.toDTO(newUrl);
         } catch (IllegalArgumentException | InvalidUrlException e ) {
             throw new RuntimeException("URL Validation error: " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error while saving URL: " + e.getMessage());
+        } catch (DataAccessException e) {
+            logger.info("Error while saving URL to database", e);
+            throw new DataBaseException("Error while saving URL to database", e);
         }
+
+
     }
 }
