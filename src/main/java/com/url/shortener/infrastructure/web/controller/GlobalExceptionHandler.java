@@ -21,6 +21,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidUrlException.class)
     public ResponseEntity<ErrorResponse> handleInvalidUrlException(InvalidUrlException ex, WebRequest webRequest) {
         ErrorResponse invalidUrlResponse = new ErrorResponse(ex.getMessage(), webRequest.getDescription(false));
-        return new ResponseEntity<>(invalidUrlResponse, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(invalidUrlResponse, HttpStatus.BAD_REQUEST);
     }
 }
