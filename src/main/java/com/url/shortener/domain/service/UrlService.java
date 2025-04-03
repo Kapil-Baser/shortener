@@ -88,4 +88,23 @@ public class UrlService {
             throw new DataBaseException("Database error while trying to update the URL", e);
         }
     }
+
+    public void deleteByShortUrl(String shortUrl) {
+        if (shortUrl == null || shortUrl.isEmpty()) {
+            throw new IllegalArgumentException("URL cannot be null or empty");
+        }
+
+        try {
+            Url savedUrl = repository.findByShortUrl(shortUrl)
+                    .orElseThrow(
+                    () -> new ResourceNotFoundException("Error: No matching URL for requested short url: " + shortUrl)
+            );
+
+            // Now that we got the saved Url we can delete it
+            repository.delete(savedUrl);
+
+        } catch (DataAccessException e) {
+            throw new DataBaseException("Database error while trying to delete the URL", e);
+        }
+    }
 }
