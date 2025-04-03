@@ -40,4 +40,10 @@ public class UrlShortenerController {
         UrlDTO updatedDTO = urlService.updateUrl(shortUrl, url);
         return ResponseEntity.status(HttpStatus.OK).body(updatedDTO);
     }
+
+    @DeleteMapping("/shorten/{shortUrl}")
+    public ResponseEntity deleteUrl(@PathVariable("shortUrl") String shortUrl) {
+        urlService.deleteByShortUrl(shortUrl);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }
