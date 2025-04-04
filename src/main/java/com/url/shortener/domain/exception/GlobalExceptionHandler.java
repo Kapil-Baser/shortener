@@ -1,8 +1,5 @@
-package com.url.shortener.infrastructure.web.controller;
+package com.url.shortener.domain.exception;
 
-import com.url.shortener.domain.exception.ErrorResponse;
-import com.url.shortener.domain.exception.InvalidUrlException;
-import com.url.shortener.domain.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
