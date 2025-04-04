@@ -6,7 +6,7 @@ public class UrlDTO {
     private String shortUrl;
     private String createdAt;
     private String updatedAt;
-    private String accessCount;
+    private int accessCount;
 
     public String getId() {
         return id;
@@ -48,11 +48,11 @@ public class UrlDTO {
         this.updatedAt = updatedAt;
     }
 
-    public String getAccessCount() {
+    public int getAccessCount() {
         return accessCount;
     }
 
-    public void setAccessCount(String accessCount) {
+    public void setAccessCount(int accessCount) {
         this.accessCount = accessCount;
     }
 }
