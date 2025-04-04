@@ -10,6 +10,8 @@ public class UrlMapper {
         dto.setUrl(url.getUrl());
         dto.setShortUrl(url.getShortUrl());
         dto.setCreatedAt(url.getCreatedAt().toString());
+        dto.setUpdatedAt(url.getUpdatedAt().toString());
+        dto.setAccessCount(url.getAccessCount());
         return dto;
     }
 }
