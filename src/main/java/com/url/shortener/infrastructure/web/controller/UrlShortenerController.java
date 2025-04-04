@@ -1,4 +1,4 @@
-package com.url.shortener.infrastructure.web;
+package com.url.shortener.infrastructure.web.controller;
 
 import com.url.shortener.domain.dto.UrlDTO;
 import com.url.shortener.domain.factory.UrlShorteningFactory;
