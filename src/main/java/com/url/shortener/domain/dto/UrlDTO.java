@@ -5,6 +5,8 @@ public class UrlDTO {
     private String url;
     private String shortUrl;
     private String createdAt;
+    private String updatedAt;
+    private String accessCount;
 
     public String getId() {
         return id;
@@ -36,5 +38,21 @@ public class UrlDTO {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getAccessCount() {
+        return accessCount;
+    }
+
+    public void setAccessCount(String accessCount) {
+        this.accessCount = accessCount;
     }
 }
