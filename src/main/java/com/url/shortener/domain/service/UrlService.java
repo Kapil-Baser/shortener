@@ -107,4 +107,22 @@ public class UrlService {
             throw new DataBaseException("Database error while trying to delete the URL", e);
         }
     }
+
+    public UrlDTO getStats(String shortUrl) {
+        if (shortUrl == null || shortUrl.isEmpty()) {
+            throw new IllegalArgumentException("URL cannot be null or empty");
+        }
+
+        try {
+            Url savedUrl = repository.findByShortUrl(shortUrl)
+                    .orElseThrow(
+                    () -> new ResourceNotFoundException("No stats for requested short URL")
+            );
+
+            return UrlMapper.toDTO(savedUrl);
+        } catch (DataAccessException e) {
+            throw new DataBaseException("Database error while trying to fetch URL stats", e);
+        }
+
+    }
 }
