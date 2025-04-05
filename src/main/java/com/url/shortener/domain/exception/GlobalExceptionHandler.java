@@ -20,4 +20,10 @@ public class GlobalExceptionHandler {
         ErrorResponse invalidUrlResponse = new ErrorResponse(ex.getMessage(), webRequest.getDescription(false));
         return new ResponseEntity<>(invalidUrlResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DataBaseException.class)
+    public ResponseEntity<ErrorResponse> handleDataBaseException(DataBaseException ex, WebRequest webRequest) {
+        ErrorResponse dataBaseErrorResponse = new ErrorResponse(ex.getMessage(), webRequest.getDescription(false));
+        return new ResponseEntity<>(dataBaseErrorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
