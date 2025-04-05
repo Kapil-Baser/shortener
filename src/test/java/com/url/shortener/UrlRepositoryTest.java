@@ -23,7 +23,7 @@ public class UrlRepositoryTest {
 
     @Test
     void testFindByOriginalUrl() {
-        Optional<Url> url = urlRepository.findByOriginalUrl("https://example.com");
+        Optional<Url> url = urlRepository.findByUrl("https://example.com");
         assertTrue(url.isPresent());
         assertEquals("ab142", url.get().getShortUrl());
     }
@@ -32,12 +32,12 @@ public class UrlRepositoryTest {
     void testFindByShortUrl() {
         Optional<Url> url = urlRepository.findByShortUrl("ab142");
         assertTrue(url.isPresent());
-        assertEquals("https://example.com", url.get().getOriginalUrl());
+        assertEquals("https://example.com", url.get().getUrl());
     }
 
     @Test
     void testNonExistentUrl() {
-        Optional<Url> url = urlRepository.findByOriginalUrl("https://nonexistent.com");
+        Optional<Url> url = urlRepository.findByUrl("https://nonexistent.com");
         assertFalse(url.isPresent());
     }
 }
