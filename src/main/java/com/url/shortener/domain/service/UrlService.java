@@ -12,7 +12,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class UrlService {
@@ -22,23 +21,6 @@ public class UrlService {
     public UrlService(UrlRepository repository) {
         this.repository = repository;
     }
-
-/*    public UrlDTO getDTOFromOriginalUrl(String originalUrl) {
-        if (originalUrl == null || originalUrl.isEmpty()) {
-            throw new IllegalArgumentException("URL cannot be null or empty");
-        }
-
-        try {
-            Optional<Url> url = repository.findByUrl(originalUrl);
-            if (url.isEmpty()) {
-                throw new ResourceNotFoundException("No DTO found matching the requested URL: " + originalUrl);
-            }
-
-            return UrlMapper.toDTO(url.get());
-        } catch (DataAccessException e) {
-            throw new DataBaseException("Database error while retrieving URL", e);
-        }
-    }*/
 
     public UrlDTO getDTOFromShortUrl(String shortUrl) {
         if (shortUrl == null || shortUrl.isEmpty()) {
