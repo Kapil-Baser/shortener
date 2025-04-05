@@ -56,7 +56,5 @@ public class UuidShortener implements ShortenerService{
             logger.info("Error while saving URL to database", e);
             throw new DataBaseException("Error while saving URL to database", e);
         }
-
-
     }
 }
