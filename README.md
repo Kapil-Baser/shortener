@@ -16,8 +16,8 @@ This project is a URL Shortener service that allows users to shorten URLs, retri
 ## Features
 
   - Create a short URL from a full URL
-  - Scans the full URL in case it contains any malcious JavaScript code
-  - Retrieve an original URL from a shortend URL
+  - Scans the full URL in case it contains any malicious JavaScript code
+  - Retrieve an original URL from a shortened URL
   - Update an existing URL
   - Delete an existing URL
   - Provide statistics like access count of any existing URL
