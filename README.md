@@ -29,7 +29,14 @@ This project is a URL Shortener service that allows users to shorten URLs, retri
 ## To run locally
 1. Clone the repository
    ```BASH
-    git clone
+   git clone https://github.com/Kapil-Baser/shortener.git
+   cd shortener
+    ```
+2. Configure the Database
+    - Update application.properties with your database credentials.
+3. Build and Run
+    ```
+    mvnw spring-boot:run
     ```
 
 ## API Documentation
