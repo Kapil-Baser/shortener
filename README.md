@@ -24,7 +24,13 @@ This project is a URL Shortener service that allows users to shorten URLs, retri
 
 ## Prerequisites
   - Java 17 or above
-  - Docker
+  - MySQL
+
+## To run locally
+1. Clone the repository
+   ```BASH
+    git clone
+    ```
 
 ## API Documentation
 
