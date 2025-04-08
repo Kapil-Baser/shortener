@@ -8,6 +8,7 @@ import com.url.shortener.domain.mapper.UrlMapper;
 import com.url.shortener.domain.model.Url;
 import com.url.shortener.infrastructure.persistence.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class UrlService {
         this.repository = repository;
     }
 
+    @CachePut(value = "urlCache", key = "#shortUrl")
     public UrlDTO getDTOFromShortUrl(String shortUrl) {
         if (shortUrl == null || shortUrl.isEmpty()) {
             throw new IllegalArgumentException("URL cannot be null or empty");
