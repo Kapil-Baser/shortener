@@ -23,8 +23,8 @@ public class UrlShortenerController {
     }
 
     @PostMapping("/shorten")
-    public ResponseEntity<UrlDTO> shortenUrl(@RequestBody String url) {
-        UrlDTO dto = shortenerService.generateShortUrl(url);
+    public ResponseEntity<UrlDTO> shortenUrl(@RequestBody Url url) {
+        UrlDTO dto = shortenerService.generateShortUrl(url.getUrl());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
@@ -41,9 +41,9 @@ public class UrlShortenerController {
     }
 
     @DeleteMapping("/shorten/{shortUrl}")
-    public ResponseEntity deleteUrl(@PathVariable("shortUrl") String shortUrl) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUrl(@PathVariable("shortUrl") String shortUrl) {
         urlService.deleteByShortUrl(shortUrl);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/shorten/{shortUrl}/stats")
