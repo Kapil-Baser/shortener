@@ -23,7 +23,6 @@ public class UrlService {
         this.repository = repository;
     }
 
-    @CachePut(value = "urlCache", key = "#shortUrl")
     public UrlDTO getDTOFromShortUrl(String shortUrl) {
         if (shortUrl == null || shortUrl.isEmpty()) {
             throw new IllegalArgumentException("URL cannot be null or empty");
