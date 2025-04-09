@@ -16,16 +16,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UuidShortener implements ShortenerService{
+public class UrlShortenerService{
     private final UrlRepository repository;
-    private final Logger logger = LoggerFactory.getLogger(UuidShortener.class);
+    private final Logger logger = LoggerFactory.getLogger(UrlShortenerService.class);
 
     @Autowired
-    public UuidShortener(UrlRepository repository) {
+    public UrlShortenerService(UrlRepository repository) {
         this.repository = repository;
     }
 
-    @Override
+
     public UrlDTO generateShortUrl(String originalUrl) {
         try {
             String safeUrl = UrlSanitizer.sanitizeUrl(originalUrl);
