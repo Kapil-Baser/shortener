@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/shorten")
 public class UrlShortenerController {
 
     private final UrlShortenerService shortenerService;
@@ -22,31 +22,31 @@ public class UrlShortenerController {
         this.urlService = service;
     }
 
-    @PostMapping("/shorten")
+    @PostMapping("")
     public ResponseEntity<UrlDTO> shortenUrl(@RequestBody Url url) {
         UrlDTO dto = shortenerService.generateShortUrl(url.getUrl());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    @GetMapping("/shorten/{url}")
+    @GetMapping("/{url}")
     public ResponseEntity<UrlDTO> getUrlDTOFromShortUrl(@PathVariable("url") String url) {
         UrlDTO dtoFromShortUrl = urlService.getDTOFromShortUrl(url);
         return ResponseEntity.status(HttpStatus.OK).body(dtoFromShortUrl);
     }
 
-    @PutMapping("/shorten/{shortUrl}")
+    @PutMapping("/{shortUrl}")
     public ResponseEntity<UrlDTO> updateUrl(@PathVariable("shortUrl") String shortUrl, @RequestBody Url url) {
         UrlDTO updatedDTO = urlService.updateUrl(shortUrl, url);
         return ResponseEntity.status(HttpStatus.OK).body(updatedDTO);
     }
 
-    @DeleteMapping("/shorten/{shortUrl}")
+    @DeleteMapping("/{shortUrl}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUrl(@PathVariable("shortUrl") String shortUrl) {
         urlService.deleteByShortUrl(shortUrl);
     }
 
-    @GetMapping("/shorten/{shortUrl}/stats")
+    @GetMapping("/{shortUrl}/stats")
     public ResponseEntity<UrlDTO> stats(@PathVariable("shortUrl") String shortUrl) {
         UrlDTO dto = urlService.getStats(shortUrl);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
