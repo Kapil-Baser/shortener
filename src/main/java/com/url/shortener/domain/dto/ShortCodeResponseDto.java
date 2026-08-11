@@ -1,4 +1,4 @@
 package com.url.shortener.domain.dto;
 
-public record ShortCodeResponseDto() {
+public record ShortCodeResponseDto(String shortCode) {
 }
