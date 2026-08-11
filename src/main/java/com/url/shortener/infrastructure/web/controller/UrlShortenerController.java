@@ -1,5 +1,7 @@
 package com.url.shortener.infrastructure.web.controller;
 
+import com.url.shortener.domain.dto.ShortenUrlRequestDto;
+import com.url.shortener.domain.dto.ShortenUrlResponseDto;
 import com.url.shortener.domain.dto.UrlDTO;
 import com.url.shortener.domain.model.Url;
 import com.url.shortener.domain.service.UrlService;
@@ -8,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/shorten")
@@ -25,14 +24,12 @@ public class UrlShortenerController {
         this.urlService = service;
     }
 
-    @PostMapping("")
-    public ResponseEntity<UrlDTO> shortenUrl(@RequestBody Url url, UriComponentsBuilder ucb) {
-        UrlDTO dto = shortenerService.generateShortUrl(url.getUrl());
-        URI locationOfNewUrl = ucb
-                .path("/api/v1/shorten/{shortUrl}")
-                .buildAndExpand(dto.getShortUrl())
-                .toUri();
-        return ResponseEntity.created(locationOfNewUrl).body(dto);
+    @PostMapping
+    public ResponseEntity<ShortenUrlResponseDto> shortenUrl(@RequestBody ShortenUrlRequestDto dto) {
+        UrlDTO urlDto = shortenerService.generateShortUrl(dto.url());
+        String shortCode = urlDto.getShortUrl();
+        ShortenUrlResponseDto responseDto = new ShortenUrlResponseDto(shortCode);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{url}")
