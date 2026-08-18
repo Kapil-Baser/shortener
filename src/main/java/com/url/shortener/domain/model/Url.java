@@ -1,6 +1,8 @@
 package com.url.shortener.domain.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -9,26 +11,27 @@ import java.time.LocalDateTime;
 public class Url {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 500)
+    @Column(nullable = false, unique = true, length = 100)
     private String url;
 
-    @Column(unique = true, length = 10)
-    private String shortUrl;
+    @Column(name = "short_code", unique = true, length = 8)
+    private String shortCode;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDateTime createdAt;
 
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "access_count")
     private int accessCount;
 
     public Url() {}
-
-    public Url(String originalUrl, String shortUrl) {
-        this.url = originalUrl;
-        this.shortUrl = shortUrl;
-    }
 
     public Long getId() {
         return id;
@@ -46,12 +49,12 @@ public class Url {
         this.url = url;
     }
 
-    public String getShortUrl() {
-        return shortUrl;
+    public String getShortCode() {
+        return shortCode;
     }
 
-    public void setShortUrl(String shortUrl) {
-        this.shortUrl = shortUrl;
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
     }
 
     public LocalDateTime getCreatedAt() {

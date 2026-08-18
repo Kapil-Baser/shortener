@@ -8,7 +8,6 @@ import com.url.shortener.domain.mapper.UrlMapper;
 import com.url.shortener.domain.model.Url;
 import com.url.shortener.infrastructure.persistence.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,7 @@ public class UrlService {
         }
 
         try {
-            Url foundUrl = repository.findByShortUrl(shortUrl)
+            Url foundUrl = repository.findByShortCode(shortUrl)
                     .orElseThrow(
                     () -> new ResourceNotFoundException("Error: No URL found")
             );
@@ -56,7 +55,7 @@ public class UrlService {
         }
 
         try {
-            Url savedUrl = repository.findByShortUrl(shortUrl)
+            Url savedUrl = repository.findByShortCode(shortUrl)
                     .orElseThrow(() -> new ResourceNotFoundException("Error: No matching URL for requested short url: " + shortUrl)
             );
 
@@ -78,7 +77,7 @@ public class UrlService {
         }
 
         try {
-            Url savedUrl = repository.findByShortUrl(shortUrl)
+            Url savedUrl = repository.findByShortCode(shortUrl)
                     .orElseThrow(
                     () -> new ResourceNotFoundException("Error: No matching URL for requested short url: " + shortUrl)
             );
@@ -97,7 +96,7 @@ public class UrlService {
         }
 
         try {
-            Url savedUrl = repository.findByShortUrl(shortUrl)
+            Url savedUrl = repository.findByShortCode(shortUrl)
                     .orElseThrow(
                     () -> new ResourceNotFoundException("No stats for requested short URL")
             );
