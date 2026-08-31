@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/v1/shorten")
 public class UrlShortenerController {
@@ -30,6 +32,14 @@ public class UrlShortenerController {
         String shortCode = urlDto.getShortUrl();
         ShortenUrlResponseDto responseDto = new ShortenUrlResponseDto(shortCode);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{shortCode}")
+    public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortCode) {
+        String url = urlService.getOriginalUrl(shortCode);
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY.value())
+                .location(URI.create(url))
+                .build();
     }
 
     @GetMapping("/{url}")
