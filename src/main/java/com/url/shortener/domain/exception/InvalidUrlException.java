@@ -1,6 +1,6 @@
 package com.url.shortener.domain.exception;
 
-public class InvalidUrlException extends UrlServiceException{
+public class InvalidUrlException extends RuntimeException{
     public InvalidUrlException(String message) {
         super(message);
     }
