@@ -1,17 +1,15 @@
 package com.url.shortener.domain.service;
 
-import com.url.shortener.domain.dto.UrlDTO;
-import com.url.shortener.domain.exception.DataBaseException;
-import com.url.shortener.domain.exception.InvalidUrlException;
+import com.url.shortener.domain.dto.ShortenUrlRequestDto;
+import com.url.shortener.domain.dto.ShortenUrlResponseDto;
+import com.url.shortener.domain.dto.UrlStatsDto;
 import com.url.shortener.domain.exception.ResourceNotFoundException;
 import com.url.shortener.domain.mapper.UrlMapper;
 import com.url.shortener.domain.model.Url;
 import com.url.shortener.infrastructure.persistence.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 
 @Service
 public class UrlService {
@@ -22,89 +20,49 @@ public class UrlService {
         this.repository = repository;
     }
 
-    public UrlDTO getDTOFromShortUrl(String shortUrl) {
-        if (shortUrl == null || shortUrl.isEmpty()) {
-            throw new IllegalArgumentException("URL cannot be null or empty");
-        }
+    public ShortenUrlResponseDto getOriginalUrl(String shortCode) {
+        Url foundUrl = findByShortCode(shortCode);
 
-        try {
-            Url foundUrl = repository.findByShortCode(shortUrl)
-                    .orElseThrow(
-                    () -> new ResourceNotFoundException("Error: No URL found")
-            );
+        // Updating the access count
+        foundUrl.setAccessCount(foundUrl.getAccessCount() + 1);
 
-            // Updating the access count
-            foundUrl.setAccessCount(foundUrl.getAccessCount() + 1);
+        // Saving the Url entity back to database before returning
+        repository.save(foundUrl);
 
-            // Saving the Url entity back to database before returning
-            repository.save(foundUrl);
+        return UrlMapper.toDto(foundUrl);
 
-            return UrlMapper.toDTO(foundUrl);
-        } catch (DataAccessException e) {
-            throw new DataBaseException("Database error while retrieving URL", e);
-        }
     }
 
-    public UrlDTO updateUrl(String shortUrl, Url updatedUrl) {
-        if (shortUrl == null || shortUrl.isEmpty()) {
-            throw new IllegalArgumentException("URL cannot be null or empty");
-        }
+    public ShortenUrlResponseDto updateUrl(String shortCode, ShortenUrlRequestDto requestDto) {
+        Url url = findByShortCode(shortCode);
 
-        if (updatedUrl == null) {
-            throw new InvalidUrlException("URL data cannot be null");
-        }
+        String urlToUpdate = UrlSanitizer.sanitizeUrl(requestDto.url());
 
-        try {
-            Url savedUrl = repository.findByShortCode(shortUrl)
-                    .orElseThrow(() -> new ResourceNotFoundException("Error: No matching URL for requested short url: " + shortUrl)
-            );
+        // Updating the URL
+        url.setUrl(urlToUpdate);
 
-            // Updating the URL
-            savedUrl.setUrl(updatedUrl.getUrl());
-            savedUrl.setUpdatedAt(LocalDateTime.now());
+        Url updatedUrl = repository.save(url);
 
-            repository.save(savedUrl);
-
-            return UrlMapper.toDTO(savedUrl);
-        } catch (DataAccessException e) {
-            throw new DataBaseException("Database error while trying to update the URL", e);
-        }
+        return UrlMapper.toDto(updatedUrl);
     }
 
-    public void deleteByShortUrl(String shortUrl) {
-        if (shortUrl == null || shortUrl.isEmpty()) {
-            throw new IllegalArgumentException("URL cannot be null or empty");
-        }
 
-        try {
-            Url savedUrl = repository.findByShortCode(shortUrl)
-                    .orElseThrow(
-                    () -> new ResourceNotFoundException("Error: No matching URL for requested short url: " + shortUrl)
-            );
+    public void deleteByShortCode(String shortCode) {
+        Url savedUrl = findByShortCode(shortCode);
 
-            // Now that we got the saved Url we can delete it
-            repository.delete(savedUrl);
-
-        } catch (DataAccessException e) {
-            throw new DataBaseException("Database error while trying to delete the URL", e);
-        }
+        repository.delete(savedUrl);
     }
 
-    public UrlDTO getStats(String shortUrl) {
-        if (shortUrl == null || shortUrl.isEmpty()) {
-            throw new IllegalArgumentException("URL cannot be null or empty");
-        }
+    public UrlStatsDto getStats(String shortCode) {
+        Url savedUrl = findByShortCode(shortCode);
 
-        try {
-            Url savedUrl = repository.findByShortCode(shortUrl)
-                    .orElseThrow(
-                    () -> new ResourceNotFoundException("No stats for requested short URL")
-            );
+        return UrlMapper.toStatsDto(savedUrl);
+    }
 
-            return UrlMapper.toDTO(savedUrl);
-        } catch (DataAccessException e) {
-            throw new DataBaseException("Database error while trying to fetch URL stats", e);
-        }
-
+    private Url findByShortCode(String shortCode) {
+        return repository.findByShortCode(shortCode)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("URL not found for given shortCode: " + shortCode)
+                );
     }
 }
