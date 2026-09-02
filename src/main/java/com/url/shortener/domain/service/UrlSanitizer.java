@@ -20,10 +20,6 @@ public class UrlSanitizer {
     );
 
     public static String sanitizeUrl(String originalUrl) {
-        if (originalUrl == null || originalUrl.trim().isEmpty()) {
-            throw new IllegalArgumentException("URL cannot be null or empty");
-        }
-
         // Remove leading and trailing whitespace
         String cleanUrl = originalUrl.trim();
 
