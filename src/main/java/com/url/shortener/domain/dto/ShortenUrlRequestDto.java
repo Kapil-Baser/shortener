@@ -1,4 +1,6 @@
 package com.url.shortener.domain.dto;
 
-public record ShortenUrlRequestDto(String url) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record ShortenUrlRequestDto(@NotEmpty(message = "URL cannot be empty or null") String url) {
 }
