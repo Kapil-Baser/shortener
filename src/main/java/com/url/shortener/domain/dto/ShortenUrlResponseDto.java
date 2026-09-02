@@ -1,4 +1,6 @@
 package com.url.shortener.domain.dto;
 
-public record ShortenUrlResponseDto(String shortCode) {
+import java.time.LocalDateTime;
+
+public record ShortenUrlResponseDto(String id, String url, String shortCode, LocalDateTime createdAt, LocalDateTime updatedAt) {
 }
