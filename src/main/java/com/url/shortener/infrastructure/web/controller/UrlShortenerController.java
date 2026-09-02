@@ -1,9 +1,11 @@
 package com.url.shortener.infrastructure.web.controller;
 
-import com.url.shortener.domain.dto.UrlDTO;
-import com.url.shortener.domain.model.Url;
+import com.url.shortener.domain.dto.ShortenUrlRequestDto;
+import com.url.shortener.domain.dto.ShortenUrlResponseDto;
+import com.url.shortener.domain.dto.UrlStatsDto;
 import com.url.shortener.domain.service.UrlService;
 import com.url.shortener.domain.service.UrlShortenerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,37 +27,37 @@ public class UrlShortenerController {
         this.urlService = service;
     }
 
-    @PostMapping("")
-    public ResponseEntity<UrlDTO> shortenUrl(@RequestBody Url url, UriComponentsBuilder ucb) {
-        UrlDTO dto = shortenerService.generateShortUrl(url.getUrl());
+    @PostMapping
+    public ResponseEntity<ShortenUrlResponseDto> shortenUrl(@Valid @RequestBody ShortenUrlRequestDto requestDto, UriComponentsBuilder ucb) {
+        ShortenUrlResponseDto dto = shortenerService.generateShortUrl(requestDto);
         URI locationOfNewUrl = ucb
                 .path("/api/v1/shorten/{shortUrl}")
-                .buildAndExpand(dto.getShortUrl())
+                .buildAndExpand(dto.shortCode())
                 .toUri();
         return ResponseEntity.created(locationOfNewUrl).body(dto);
     }
 
-    @GetMapping("/{url}")
-    public ResponseEntity<UrlDTO> getUrlDTOFromShortUrl(@PathVariable("url") String url) {
-        UrlDTO dtoFromShortUrl = urlService.getDTOFromShortUrl(url);
-        return ResponseEntity.status(HttpStatus.OK).body(dtoFromShortUrl);
+    @GetMapping("/{shortCode}")
+    public ResponseEntity<ShortenUrlResponseDto> getOriginalUrl(@PathVariable("shortCode") String shortCode) {
+        var responseDto = urlService.getOriginalUrl(shortCode);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @PutMapping("/{shortUrl}")
-    public ResponseEntity<UrlDTO> updateUrl(@PathVariable("shortUrl") String shortUrl, @RequestBody Url url) {
-        UrlDTO updatedDTO = urlService.updateUrl(shortUrl, url);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedDTO);
+    @PutMapping("/{shortCode}")
+    public ResponseEntity<ShortenUrlResponseDto> updateUrl(@PathVariable("shortCode") String shortCode, @Valid @RequestBody ShortenUrlRequestDto dto) {
+        var updatedUrl = urlService.updateUrl(shortCode, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUrl);
     }
 
-    @DeleteMapping("/{shortUrl}")
+    @DeleteMapping("/{shortCode}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUrl(@PathVariable("shortUrl") String shortUrl) {
-        urlService.deleteByShortUrl(shortUrl);
+    public void deleteUrl(@PathVariable("shortCode") String shortCode) {
+        urlService.deleteByShortCode(shortCode);
     }
 
-    @GetMapping("/{shortUrl}/stats")
-    public ResponseEntity<UrlDTO> stats(@PathVariable("shortUrl") String shortUrl) {
-        UrlDTO dto = urlService.getStats(shortUrl);
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    @GetMapping("/{shortCode}/stats")
+    public ResponseEntity<UrlStatsDto> urlStats(@PathVariable("shortCode") String shortCode) {
+        var stats = urlService.getStats(shortCode);
+        return ResponseEntity.status(HttpStatus.OK).body(stats);
     }
 }
