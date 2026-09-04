@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.regex.Pattern;
 
 public class UrlSanitizer {
+    private UrlSanitizer() {}
+
     private static final Pattern JAVASCRIPT_PATTERN = Pattern.compile(
             "javascript:", Pattern.CASE_INSENSITIVE
     );
