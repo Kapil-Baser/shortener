@@ -92,6 +92,71 @@ class UrlShortenerControllerTest {
     }
 
     @Test
+    void getOriginalUrl_ShouldReturnOkStatusWithOriginalUrl_WhenShortCodeExists() throws Exception {
+        String shortCode = "abc123";
+        ShortenUrlResponseDto responseDto = new ShortenUrlResponseDto("1", "https://test.com", "abc123", LocalDateTime.now(), LocalDateTime.now());
+
+        when(urlService.getOriginalUrl(shortCode)).thenReturn(responseDto);
+
+        mockMvc.perform(get("/api/v1/shorten/{shortCode}", shortCode))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.url").value("https://test.com"));
+
+        verify(urlService).getOriginalUrl(shortCode);
+    }
+
+    @Test
+    void getOriginalUrl_ShouldPropagateNotFoundException_WhenShortCodeDoesNotExist() throws Exception {
+        String shortCode = "invalid";
+
+        doThrow(new ResourceNotFoundException("Url not found.")).when(urlService).getOriginalUrl(shortCode);
+
+        mockMvc.perform(get("/api/v1/shorten/{shortCode}", shortCode))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ResourceNotFoundException.class))
+                .andExpect(jsonPath("$.detail").value("Url not found."));
+
+        verify(urlService).getOriginalUrl(shortCode);
+    }
+
+    @Test
+    void updateUrl_ShouldReturnOkStatusWithUpdatedUrl_WhenUrlIsUpdated() throws Exception {
+        String shortCode = "abc123";
+        ShortenUrlRequestDto requestDto = new ShortenUrlRequestDto("https://test.com");
+        String jsonBody = new ObjectMapper().writeValueAsString(requestDto);
+        ShortenUrlResponseDto responseDto = new ShortenUrlResponseDto("1", requestDto.url(), "abc123", LocalDateTime.now(), LocalDateTime.now());
+
+        when(urlService.updateUrl(shortCode, requestDto)).thenReturn(responseDto);
+
+        mockMvc.perform(put("/api/v1/shorten/{shortCode}", shortCode)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.url").value("https://test.com"));
+
+        verify(urlService).updateUrl(shortCode, requestDto);
+    }
+
+    @Test
+    void updateUrl_ShouldPropagateValidationException_WhenRequestDtoIsInvalid() throws Exception {
+        String shortCode = "abc123";
+        ShortenUrlRequestDto requestDto = new ShortenUrlRequestDto("htts:/invalid");
+        String jsonBody = new ObjectMapper().writeValueAsString(requestDto);
+
+        doThrow(new InvalidUrlException("Invalid Url")).when(urlService).updateUrl(shortCode,requestDto);
+
+        mockMvc.perform(put("/api/v1/shorten/{shortCode}", shortCode)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(InvalidUrlException.class))
+                .andExpect(jsonPath("$.detail").value("Invalid Url"));
+
+        verify(urlService).updateUrl(shortCode, requestDto);
+    }
+
+    @Test
     void deleteUrl_ShouldReturnNoContentStatus_WhenUrlIsDeleted() throws Exception {
         String shortCode = "abc123";
 
@@ -145,7 +210,18 @@ class UrlShortenerControllerTest {
         verify(urlService).getStats(shortCode);
     }
 
+    @Test
+    void urlStats_ShouldPropagateNotFoundException_WhenShortCodeDoesNotExist() throws Exception {
+        String shortCode = "invalid";
 
-    
+        doThrow(new ResourceNotFoundException("Url not found.")).when(urlService).getStats(shortCode);
 
+        mockMvc.perform(get("/api/v1/shorten/{shortCode}/stats", shortCode))
+                .andExpect(status().isNotFound()).andExpect(result -> {
+                    assertThat(result.getResolvedException()).isInstanceOf(ResourceNotFoundException.class);
+                })
+                .andExpect(jsonPath("$.detail").value("Url not found."));
+
+        verify(urlService).getStats(shortCode);
+    }
 }
