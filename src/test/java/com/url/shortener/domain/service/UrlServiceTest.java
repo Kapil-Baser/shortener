@@ -1,7 +1,9 @@
 package com.url.shortener.domain.service;
 
+import com.url.shortener.domain.dto.ShortenUrlRequestDto;
 import com.url.shortener.domain.dto.ShortenUrlResponseDto;
 import com.url.shortener.domain.dto.UrlStatsDto;
+import com.url.shortener.domain.exception.ResourceNotFoundException;
 import com.url.shortener.domain.model.Url;
 import com.url.shortener.infrastructure.persistence.UrlRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UrlServiceTest {
@@ -60,6 +61,34 @@ class UrlServiceTest {
     }
 
     @Test
+    void updateUrl_shouldUpdateUrlAndReturnUpdatedUrl() {
+        ShortenUrlRequestDto requestDto = new ShortenUrlRequestDto("http://update-url.com");
+
+        when(repository.findByShortCode(SHORT_CODE)).thenReturn(Optional.of(url));
+        when(repository.save(this.url)).thenReturn(this.url);
+
+        ShortenUrlResponseDto result = urlService.updateUrl(SHORT_CODE, requestDto);
+
+        assertThat(result.url()).isEqualTo(requestDto.url());
+
+        verify(repository).findByShortCode(SHORT_CODE);
+        verify(repository).save(this.url);
+    }
+
+    @Test
+    void updateUrl_shouldThrowExceptionWhenUpdatingUnknownShortCode() {
+        ShortenUrlRequestDto requestDto = new ShortenUrlRequestDto("http://update-url.com");
+
+        when(repository.findByShortCode(SHORT_CODE)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> urlService.updateUrl(SHORT_CODE, requestDto))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("URL not found for given shortCode: " + SHORT_CODE);
+
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
     void deleteByShortCode_shouldDeleteUrlWithGivenShortCode() {
 
         when(repository.findByShortCode(SHORT_CODE)).thenReturn(Optional.of(url));
@@ -78,6 +107,17 @@ class UrlServiceTest {
     }
 
     @Test
+    void deleteByShortCode_shouldThrowExceptionWhenDeletingUnknownShortCode() {
+        when(repository.findByShortCode(SHORT_CODE)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> urlService.deleteByShortCode(SHORT_CODE))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("URL not found for given shortCode: " + SHORT_CODE);
+
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
     void getStats_shouldReturnUrlStatsForGivenShortCode() {
         when(repository.findByShortCode(SHORT_CODE)).thenReturn(Optional.of(url));
 
@@ -89,4 +129,14 @@ class UrlServiceTest {
         verify(repository).findByShortCode(SHORT_CODE);
     }
 
+    @Test
+    void getStats_shouldThrowExceptionWhenGettingStatsForUnknownShortCode() {
+        when(repository.findByShortCode(SHORT_CODE)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> urlService.getStats(SHORT_CODE))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("URL not found for given shortCode: " + SHORT_CODE);
+
+        verify(repository).findByShortCode(SHORT_CODE);
+    }
 }
