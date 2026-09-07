@@ -34,9 +34,9 @@ public class UrlService {
     }
 
     public ShortenUrlResponseDto updateUrl(String shortCode, ShortenUrlRequestDto requestDto) {
-        Url url = findByShortCode(shortCode);
-
         String urlToUpdate = UrlSanitizer.sanitizeUrl(requestDto.url());
+
+        Url url = findByShortCode(shortCode);
 
         // Updating the URL
         url.setUrl(urlToUpdate);
