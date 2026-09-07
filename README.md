@@ -23,7 +23,7 @@ This project is a URL Shortener service that allows users to shorten URLs, retri
   - Provide statistics like access count of any existing URL
 
 ## Prerequisites
-  - Java 17 or above
+  - Java 23 or above
   - MySQL
 
 ## To run locally
@@ -39,7 +39,36 @@ This project is a URL Shortener service that allows users to shorten URLs, retri
     mvnw spring-boot:run
     ```
 
+## Deployment with Docker
+
+If you have Docker and Docker Compose installed, you can spin up the entire application and database with a single command.
+
+1. **Set up your environment variables:**
+   Clone the example environment file and fill in your desired database credentials:
+   ```bash
+   cp .env.example .env
+   ```
+   *(Open the newly created `.env` file and adjust the passwords if needed).*
+
+2. **Start the application stack:**
+   ```bash
+   docker compose up --build
+   ```
+
+3. **Access the application:**
+   * App URL: `http://localhost:8080`
+
+4. **Stop the containers:**
+   ```bash
+   docker compose down
+   ```
+
+
 ## API Documentation
+
+Interactive Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+
+Raw OpenAPI Description (JSON): `http://localhost:8080/v3/api-docs`
 
 Server Running on : `http://localhost:8080`
 
