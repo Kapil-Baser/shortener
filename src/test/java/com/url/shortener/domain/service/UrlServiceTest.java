@@ -42,11 +42,11 @@ class UrlServiceTest {
     }
 
     @Test
-    void getOriginalUrl_shouldReturnOriginalUrlAndIncrementAccessCount() {
+    void getUrlDto_shouldReturnOriginalUrlAndIncrementAccessCount() {
 
         when(repository.findByShortCode(SHORT_CODE)).thenReturn(Optional.of(url));
 
-        ShortenUrlResponseDto result = urlService.getOriginalUrl(SHORT_CODE);
+        ShortenUrlResponseDto result = urlService.getUrlDto(SHORT_CODE);
 
         ArgumentCaptor<Url> captor = ArgumentCaptor.forClass(Url.class);
 

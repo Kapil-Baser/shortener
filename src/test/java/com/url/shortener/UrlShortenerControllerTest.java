@@ -92,32 +92,32 @@ class UrlShortenerControllerTest {
     }
 
     @Test
-    void getOriginalUrl_ShouldReturnOkStatusWithOriginalUrl_WhenShortCodeExists() throws Exception {
+    void getUrlDto_ShouldReturnOkStatusWithOriginalUrl_WhenShortCodeExists() throws Exception {
         String shortCode = "abc123";
         ShortenUrlResponseDto responseDto = new ShortenUrlResponseDto("1", "https://test.com", "abc123", LocalDateTime.now(), LocalDateTime.now());
 
-        when(urlService.getOriginalUrl(shortCode)).thenReturn(responseDto);
+        when(urlService.getUrlDto(shortCode)).thenReturn(responseDto);
 
         mockMvc.perform(get("/api/v1/shorten/{shortCode}", shortCode))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.url").value("https://test.com"));
 
-        verify(urlService).getOriginalUrl(shortCode);
+        verify(urlService).getUrlDto(shortCode);
     }
 
     @Test
-    void getOriginalUrl_ShouldPropagateNotFoundException_WhenShortCodeDoesNotExist() throws Exception {
+    void getUrlDto_ShouldPropagateNotFoundException_WhenShortCodeDoesNotExist() throws Exception {
         String shortCode = "invalid";
 
-        doThrow(new ResourceNotFoundException("Url not found.")).when(urlService).getOriginalUrl(shortCode);
+        doThrow(new ResourceNotFoundException("Url not found.")).when(urlService).getUrlDto(shortCode);
 
         mockMvc.perform(get("/api/v1/shorten/{shortCode}", shortCode))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ResourceNotFoundException.class))
                 .andExpect(jsonPath("$.detail").value("Url not found."));
 
-        verify(urlService).getOriginalUrl(shortCode);
+        verify(urlService).getUrlDto(shortCode);
     }
 
     @Test
