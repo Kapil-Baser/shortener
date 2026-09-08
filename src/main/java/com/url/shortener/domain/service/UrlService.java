@@ -10,6 +10,8 @@ import com.url.shortener.infrastructure.persistence.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+
 
 @Service
 public class UrlService {
@@ -20,7 +22,7 @@ public class UrlService {
         this.repository = repository;
     }
 
-    public ShortenUrlResponseDto getOriginalUrl(String shortCode) {
+    public ShortenUrlResponseDto getUrlDto(String shortCode) {
         Url foundUrl = findByShortCode(shortCode);
 
         // Updating the access count
@@ -30,7 +32,12 @@ public class UrlService {
         repository.save(foundUrl);
 
         return UrlMapper.toDto(foundUrl);
+    }
 
+    public URI getRedirectionUri(String shortCode) {
+        Url foundUrl = findByShortCode(shortCode);
+
+        return URI.create(foundUrl.getUrl());
     }
 
     public ShortenUrlResponseDto updateUrl(String shortCode, ShortenUrlRequestDto requestDto) {
