@@ -11,13 +11,15 @@ This project is a URL Shortener service that allows users to shorten URLs, retri
 - Spring Boot
 - Hibernate/JPA for database interaction
 - MySQL database
+- Docker to containerize the app
 - Maven for dependency management and build automation
 
 ## Features
 
-  - Create a short URL from a full URL
+  - Create a short code from a full URL
   - Scans the full URL in case it contains any malicious JavaScript code
-  - Retrieve an original URL from a shortened URL
+  - Retrieve an original URL from a short code
+  - Redirects to original URL form a short code
   - Update an existing URL
   - Delete an existing URL
   - Provide statistics like access count of any existing URL
@@ -72,10 +74,11 @@ Raw OpenAPI Description (JSON): `http://localhost:8080/v3/api-docs`
 
 Server Running on : `http://localhost:8080`
 
-| Endpoints          | Method    | Description             |
-| ------------------ | --------- | ----------------------- |
-| `/api/v1/shorten`  | `POST`    | Create a new short URL |
-| `/api/v1/shorten/{shorturl}` | `GET`    | Retrieve the original URL from a short URL |
-| `/api/v1/shorten/{shorturl}` | `PUT`    | Update an existing short URL |
-| `/api/v1/shorten/{shorturl}` | `DELETE` | Delete an existing short URL |
-| `/api/v1/shorten/{shorturl}/stats`  | `GET`  | Get statistics for a short URL |
+| Endpoints                           | Method   | Description                                 |
+|-------------------------------------|----------|---------------------------------------------|
+| `{shortCode}`                       | `GET`    | **MVC Route:** Redirects directly to the original URL     |
+| `/api/v1/shorten`                   | `POST`   | Create a new short URL                      |
+| `/api/v1/shorten/{shortCode}`       | `GET`    | Retrieve the original URL from a short code |
+| `/api/v1/shorten/{shortCode}`       | `PUT`    | Update an existing short URL                |
+| `/api/v1/shorten/{shortCode}`       | `DELETE` | Delete an existing short URL                |
+| `/api/v1/shorten/{shortCode}/stats` | `GET`    | Get statistics for a short URL              |
