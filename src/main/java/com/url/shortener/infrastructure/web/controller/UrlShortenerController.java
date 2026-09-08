@@ -39,7 +39,7 @@ public class UrlShortenerController {
 
     @GetMapping("/{shortCode}")
     public ResponseEntity<ShortenUrlResponseDto> getOriginalUrl(@PathVariable("shortCode") String shortCode) {
-        var responseDto = urlService.getOriginalUrl(shortCode);
+        var responseDto = urlService.getUrlDto(shortCode);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
