@@ -1,7 +1,6 @@
 package com.url.shortener.infrastructure.web.controller;
 
 import com.url.shortener.domain.service.UrlService;
-import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
