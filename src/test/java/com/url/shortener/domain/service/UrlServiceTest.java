@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UrlServiceTest {
 
-    private static final String SHORT_CODE = "abc123";
+    private static final String SHORT_CODE = "abc12314";
     private Url url = new Url();
 
     @Mock
